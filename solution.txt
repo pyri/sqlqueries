@@ -1,0 +1,101 @@
+/*1 задание*/
+
+/*день*/	
+select day(t_date) as day, t_diff
+from(
+	select id, where_id as station , max(temperature)-min(temperature) as t_diff, date(date) as t_date
+	from weather 
+	group by where_id, date(date)
+	
+	) tmp
+
+where tmp.t_diff in (
+		select max(tmp2.t_diff)
+		from(
+			select id, where_id as station , max(temperature)-min(temperature) as t_diff, date(date) as t_date
+			from weather 
+			group by where_id, date(date)
+			) tmp2
+		group by station)
+		
+		
+/*месяц*/		
+select month(t_date) as month, t_diff
+from(
+	select id, where_id as station , max(temperature)-min(temperature) as t_diff, date(date) as t_date
+	from weather 
+	group by where_id, date(date)
+	
+	) tmp
+
+where tmp.t_diff in (
+		select max(tmp2.t_diff)
+		from(
+			select id, where_id as station , max(temperature)-min(temperature) as t_diff, date(date) as t_date
+			from weather 
+			group by where_id, date(date)
+			) tmp2
+		group by station)
+	
+/*неделя*/		
+select week(t_date) as week, t_diff
+from(
+	select id, where_id as station , max(temperature)-min(temperature) as t_diff, date(date) as t_date
+	from weather 
+	group by where_id, date(date)
+	
+	) tmp
+
+where tmp.t_diff in (
+		select max(tmp2.t_diff)
+		from(
+			select id, where_id as station , max(temperature)-min(temperature) as t_diff, date(date) as t_date
+			from weather 
+			group by where_id, date(date)
+			) tmp2
+		group by station)
+
+/*2 задание*/
+
+/*день*/
+select t_diff, day(t_date) as day
+from(
+	select id, where_id as station , max(temperature)-min(temperature) as t_diff, date as t_date
+	from weather 
+	group by where_id, date
+	) tmp		 
+where t_diff>10
+
+/*неделя*/
+select t_diff, week(t_date) as week
+from(
+	select id, where_id as station , max(temperature)-min(temperature) as t_diff, date as t_date
+	from weather 
+	group by where_id, date
+	) tmp		 
+where t_diff>10
+
+/*месяц*/
+select t_diff, month(t_date) as month
+from(
+	select id, where_id as station , max(temperature)-min(temperature) as t_diff, date as t_date
+	from weather 
+	group by where_id, date
+	) tmp		 
+where t_diff>10
+
+/*3 задание*/
+
+set @count_sleet = (select count(sleet) as count_sleet
+from weather
+where sleet = 1)
+
+set @count_year =(select count(year) as count_year from(
+	select distinct year(date) as year 
+	from weather) tmp)
+	
+select @count_sleet/@count_year as result
+
+
+
+
